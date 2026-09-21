@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="128" y1="96" x2="896" y2="928" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FBFF"/>
+      <stop offset="0.45" stop-color="#C9E8FF"/>
+      <stop offset="1" stop-color="#7B8CFF"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="286" y1="236" x2="760" y2="790" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white" stop-opacity="0.82"/>
+      <stop offset="0.52" stop-color="white" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#E9F3FF" stop-opacity="0.24"/>
+    </linearGradient>
+    <linearGradient id="clip" x1="386" y1="258" x2="684" y2="776" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#DCE9FF"/>
+    </linearGradient>
+    <filter id="shadow" x="178" y="164" width="668" height="716" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="30" stdDeviation="32" flood-color="#2947A3" flood-opacity="0.22"/>
+    </filter>
+    <filter id="blur" x="190" y="150" width="644" height="724" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" rx="228" fill="url(#bg)"/>
+
+  <!-- soft liquid-glass glow -->
+  <ellipse cx="512" cy="220" rx="300" ry="170" fill="#FFFFFF" fill-opacity="0.30" filter="url(#blur)"/>
+  <ellipse cx="790" cy="790" rx="250" ry="180" fill="#8DEBFF" fill-opacity="0.20" filter="url(#blur)"/>
+
+  <!-- glass panel -->
+  <g filter="url(#shadow)">
+    <rect x="236" y="170" width="552" height="684" rx="154"
+      fill="url(#glass)"
+      stroke="white" stroke-opacity="0.72" stroke-width="8"/>
+    <path d="M285 305C330 235 410 207 512 207C614 207 694 235 739 305"
+      stroke="white" stroke-opacity="0.72" stroke-width="16" stroke-linecap="round"/>
+  </g>
+
+  <!-- clipboard -->
+  <rect x="332" y="296" width="360" height="470" rx="58"
+    fill="url(#clip)"
+    fill-opacity="0.88"
+    stroke="white" stroke-width="10" stroke-opacity="0.9"/>
+
+  <!-- clipboard top -->
+  <rect x="405" y="250" width="214" height="112" rx="40"
+    fill="#FFFFFF" fill-opacity="0.92"
+    stroke="#FFFFFF" stroke-width="9"/>
+
+  <!-- clip slot -->
+  <rect x="449" y="281" width="126" height="48" rx="24"
+    fill="#9FB7E8" fill-opacity="0.72"/>
+
+  <!-- clipboard content lines -->
+  <rect x="405" y="433" width="214" height="28" rx="14" fill="#7187C8" fill-opacity="0.62"/>
+  <rect x="405" y="495" width="158" height="28" rx="14" fill="#7187C8" fill-opacity="0.46"/>
+  <rect x="405" y="557" width="190" height="28" rx="14" fill="#7187C8" fill-opacity="0.38"/>
+
+  <!-- glass highlight -->
+  <path d="M296 371C317 313 356 277 405 253"
+    stroke="white" stroke-opacity="0.75" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="710" cy="354" r="18" fill="white" fill-opacity="0.70"/>
+
+  <!-- small floating clip symbol -->
+  <g transform="translate(690 690) rotate(10)">
+    <rect x="-62" y="-62" width="124" height="124" rx="38"
+      fill="#FFFFFF" fill-opacity="0.30"
+      stroke="white" stroke-opacity="0.72" stroke-width="6"/>
+    <path d="M-18 -4L-2 12L31 -22" stroke="white" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
