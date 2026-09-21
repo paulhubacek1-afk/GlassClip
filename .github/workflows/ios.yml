@@ -1,0 +1,43 @@
+name: Build GlassClip IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: |
+          cat > project.yml <<'EOF'
+          name: GlassClip
+          options:
+            bundleIdPrefix: com.paulhubacek
+          targets:
+            GlassClip:
+              type: application
+              platform: iOS
+              deploymentTarget: "16.0"
+              sources:
+                - path: Sources
+                - path: GlassClipApp.swift
+              settings:
+                base:
+                  PRODUCT_BUNDLE_IDENTIFIER: com.paulhubacek.glassclip
+                  TARGETED_DEVICE_FAMILY: "1,2"
+          EOF
+          xcodegen generate
+      - name: Build unsigned app
+        run: xcodebuild -project GlassClip.xcodeproj -scheme GlassClip -configuration Release -sdk iphoneos -archivePath build/GlassClip.xcarchive CODE_SIGNING_ALLOWED=NO archive
+      - name: Create IPA
+        run: |
+          mkdir -p build/Payload
+          cp -R build/GlassClip.xcarchive/Products/Applications/GlassClip.app build/Payload/
+          cd build && zip -r GlassClip-unsigned.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GlassClip-IPA
+          path: build/GlassClip-unsigned.ipa
