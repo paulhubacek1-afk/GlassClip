@@ -37,13 +37,20 @@ jobs:
               settings:
                 base:
                   PRODUCT_BUNDLE_IDENTIFIER: com.paulhubacek.glassclip
+                  PRODUCT_NAME: GlassClip
+                  SWIFT_VERSION: "5.0"
+                  GENERATE_INFOPLIST_FILE: YES
                   TARGETED_DEVICE_FAMILY: "1,2"
           EOF
           xcodegen generate
 
+      - name: Verify project
+        run: |
+          xcodebuild -project GlassClip.xcodeproj -scheme GlassClip -showBuildSettings | grep -E "PRODUCT_BUNDLE_IDENTIFIER|GENERATE_INFOPLIST_FILE|INFOPLIST_FILE"
+
       - name: Build unsigned app
         run: |
-          xcodebuild -project GlassClip.xcodeproj -scheme GlassClip -configuration Release -sdk iphoneos -archivePath build/GlassClip.xcarchive CODE_SIGNING_ALLOWED=NO archive
+          xcodebuild -project GlassClip.xcodeproj -scheme GlassClip -configuration Release -sdk iphoneos -archivePath build/GlassClip.xcarchive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO archive
 
       - name: Create IPA
         run: |
