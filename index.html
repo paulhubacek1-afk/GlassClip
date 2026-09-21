@@ -1,16 +1,36 @@
 <!doctype html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#eef7ff" />
-    <meta name="description" content="GlassClip - dein Clipboard, neu gedacht." />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/assets/glassclip-icon.svg" type="image/svg+xml" />
-    <title>GlassClip</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GlassClip</title>
+<link rel="icon" href="assets/glassclip-icon.svg">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#182640;background:linear-gradient(135deg,#eef8ff,#dbe9ff,#eeeaff);min-height:100vh}main{max-width:900px;margin:auto;padding:30px 18px}.top{display:flex;justify-content:space-between;align-items:center}.brand{display:flex;gap:12px;align-items:center}.brand img{width:52px;height:52px;border-radius:16px}h1{margin:0}h2{font-size:42px;line-height:1;margin:14px 0}h2 span{color:#5f78e8}.card{background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.8);border-radius:28px;padding:26px;margin-top:20px;box-shadow:0 20px 60px rgba(50,80,140,.14);backdrop-filter:blur(20px)}button{border:0;border-radius:14px;padding:12px 16px;cursor:pointer;font-weight:700}.primary{background:#5278ed;color:white}.search,textarea{width:100%;padding:14px;border:1px solid rgba(255,255,255,.9);border-radius:15px;background:rgba(255,255,255,.55);font:inherit}.filters{display:flex;gap:7px;margin:12px 0;overflow:auto}.filter{background:rgba(255,255,255,.45)}.active{background:white;color:#5270dd}.item{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-top:10px}.item p{white-space:pre-wrap;word-break:break-word;margin:8px 0;color:#263650}.actions{display:flex;gap:5px}.actions button{padding:8px 11px;background:rgba(255,255,255,.65)}.empty{text-align:center;color:#71809a}.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);background:white;padding:12px 17px;border-radius:14px;box-shadow:0 10px 35px #0002;display:none}.toast.show{display:block}@media(max-width:600px){h2{font-size:34px}.card{padding:20px}.item{flex-direction:column}.actions{width:100%}}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><div class="brand"><img src="assets/glassclip-icon.svg"><div><small>LIQUID GLASS</small><h1>GlassClip</h1></div></div><button id="clear">Alles löschen</button></div>
+<section class="card"><h2>Alles, was du kopierst.<br><span>Endlich wiederfinden.</span></h2><p>Dein Clipboard-Verlauf. Lokal auf diesem Gerät.</p><button class="primary" id="read">Clipboard einlesen</button></section>
+<section class="card"><input class="search" id="search" placeholder="Clipboard durchsuchen …"><div class="filters" id="filters"></div><textarea id="paste" rows="4" placeholder="Text hier einfügen …"></textarea><br><button class="primary" id="save">Speichern</button></section>
+<section><h3>Verlauf</h3><div id="list"></div></section>
+</main><div class="toast" id="toast"></div>
+<script>
+const KEY="glassclip.items";let items=JSON.parse(localStorage.getItem(KEY)||"[]"),cat="Alle";
+const $=s=>document.querySelector(s);function save(){localStorage.setItem(KEY,JSON.stringify(items))}
+function toast(t){$("#toast").textContent=t;$("#toast").classList.add("show");setTimeout(()=>$("#toast").classList.remove("show"),1800)}
+function type(t){return /^https?:\/\//i.test(t.trim())?"Links":(t.length>160||t.includes("\n")?"Text":"Kurz")}
+function render(){let q=$("#search").value.toLowerCase();$("#filters").innerHTML=["Alle","Kurz","Text","Links"].map(x=>'<button class="filter '+(cat===x?"active":"")+'" onclick="cat=\''+x+'\';render()">'+x+"</button>").join("");let shown=items.filter(x=>(cat==="Alle"||x.type===cat)&&x.text.toLowerCase().includes(q));$("#list").innerHTML=shown.length?shown.map(x=>'<div class="card item"><div><small>'+x.type+' · '+new Date(x.time).toLocaleString("de-AT")+'</small><p>'+esc(x.text)+'</p></div><div class="actions"><button onclick="copyItem(\''+x.id+'\')">Kopieren</button><button onclick="delItem(\''+x.id+'\')">×</button></div></div>').join(""):'<div class="card empty">Noch nichts gespeichert.<br>Kopiere etwas oder füge unten Text ein.</div>'}
+function esc(s){return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
+function add(t){t=t.trim();if(!t)return;items.unshift({id:crypto.randomUUID(),text:t,type:type(t),time:Date.now()});items=items.slice(0,100);save();render();toast("Gespeichert")}
+async function copyItem(id){let x=items.find(i=>i.id===id);if(x){await navigator.clipboard.writeText(x.text);toast("Kopiert")}}
+function delItem(id){items=items.filter(x=>x.id!==id);save();render()}
+$("#read").onclick=async()=>{try{add(await navigator.clipboard.readText())}catch{toast("Browser blockiert den Clipboard-Zugriff")}};
+$("#save").onclick=()=>{add($("#paste").value);$("#paste").value=""};
+$("#paste").addEventListener("paste",()=>setTimeout(()=>{if($("#paste").value.trim()){add($("#paste").value);$("#paste").value=""}},0));
+$("#search").oninput=render;$("#clear").onclick=()=>{if(confirm("Alles löschen?")){items=[];save();render()}};
+render();
+</script>
+</body>
 </html>
