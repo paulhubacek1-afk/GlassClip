@@ -1,0 +1,17 @@
+{
+  "name": "GlassClip",
+  "short_name": "GlassClip",
+  "description": "Dein persönlicher Clipboard-Verlauf.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#eef7ff",
+  "theme_color": "#dcecff",
+  "icons": [
+    {
+      "src": "/assets/glassclip-icon.svg",
+      "sizes": "1024x1024",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
