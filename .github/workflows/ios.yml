@@ -64,3 +64,4 @@ jobs:
         with:
           name: GlassClip-IPA
           path: build/GlassClip-unsigned.ipa
+          retention-days: 1
